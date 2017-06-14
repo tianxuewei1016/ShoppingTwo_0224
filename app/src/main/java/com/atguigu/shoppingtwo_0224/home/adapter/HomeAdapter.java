@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 import com.atguigu.shoppingtwo_0224.R;
 import com.atguigu.shoppingtwo_0224.activity.GoodsInfoActivity;
+import com.atguigu.shoppingtwo_0224.activity.WebViewActivity;
 import com.atguigu.shoppingtwo_0224.home.bean.GoodsBean;
 import com.atguigu.shoppingtwo_0224.home.bean.HomeBean;
+import com.atguigu.shoppingtwo_0224.home.bean.WebViewBean;
 import com.atguigu.shoppingtwo_0224.home.view.MyGridView;
 import com.atguigu.shoppingtwo_0224.utils.Constants;
 import com.atguigu.shoppingtwo_0224.utils.GlideImageLoader;
@@ -40,6 +42,7 @@ import cn.iwgang.countdownview.CountdownView;
 
 public class HomeAdapter extends RecyclerView.Adapter {
     public static final String GOODS_BEAN = "goodsBean";
+    public static final String WEBVIEW_BEAN = "webview_bean";
     private final Context mContext;
     private final HomeBean.ResultEntity result;
 
@@ -249,7 +252,15 @@ public class HomeAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onItemClick(int position) {
                     HomeBean.ResultEntity.ActInfoEntity actInfoEntity = act_info.get(position);
-                    Toast.makeText(mContext, "" + actInfoEntity.getName(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mContext, "" + actInfoEntity.getName(), Toast.LENGTH_SHORT).show();
+                    WebViewBean webViewBean = new WebViewBean();
+                    webViewBean.setName(actInfoEntity.getName());
+                    webViewBean.setIcon_url(actInfoEntity.getIcon_url());
+                    webViewBean.setUrl(Constants.BASE_URL_IMAGE + actInfoEntity.getUrl());
+
+                    Intent intent = new Intent(mContext, WebViewActivity.class);
+                    intent.putExtra(WEBVIEW_BEAN, webViewBean);
+                    mContext.startActivity(intent);
                 }
             });
         }
