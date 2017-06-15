@@ -61,10 +61,17 @@ public class ShoppingCartFragment extends BaseFragment {
     private ArrayList<GoodsBean> datas;
     private ShoppingCartAdapter adapter;
 
+    //编辑状态
+    private static final int ACTION_EDIT = 1;
+    //完成状态
+    private static final int ACTION_COMPLETE = 2;
+
     @Override
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_shopping_cart, null);
         ButterKnife.inject(this, view);
+        //设置tag
+        tvShopcartEdit.setTag(ACTION_EDIT);
         return view;
     }
 
@@ -75,16 +82,20 @@ public class ShoppingCartFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
+        showData();
+    }
+
+    private void showData() {
         datas = CartStorage.getInstance(MyApplication.getContext()).getAllData();
         if (datas != null && datas.size() > 0) {
             //有数据,布局隐藏
             llEmptyShopcart.setVisibility(View.GONE);
             //设置适配器
-            adapter = new ShoppingCartAdapter(mContext,datas,checkboxAll,tvShopcartTotal,cbAll);
+            adapter = new ShoppingCartAdapter(mContext, datas, checkboxAll, tvShopcartTotal, cbAll);
             recyclerview.setAdapter(adapter);
             //设置布局管理器
-            recyclerview.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
-        }else{
+            recyclerview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        } else {
             //没有数据-空布局显示
             llEmptyShopcart.setVisibility(View.VISIBLE);
         }
@@ -100,7 +111,15 @@ public class ShoppingCartFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_shopcart_edit:
-                Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
+                int tag = (int) tvShopcartEdit.getTag();
+                if (tag == ACTION_EDIT) {//编辑
+                    //切换完成状态
+                    showDelete();
+                } else {
+                    hideDelete();
+                }
+
                 break;
             case R.id.checkbox_all:
 //                Toast.makeText(mContext, "全选", Toast.LENGTH_SHORT).show();
@@ -108,17 +127,23 @@ public class ShoppingCartFragment extends BaseFragment {
                 //设置是否选择
                 adapter.checkAll_none(checked);
                 //重新计算价格
-                adapter.showTotalPrice();
 
                 break;
             case R.id.btn_check_out:
                 Toast.makeText(mContext, "去结算", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.cb_all:
-                Toast.makeText(mContext, "删除的全选", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "删除的全选", Toast.LENGTH_SHORT).show();
+                boolean isCheckedAll = cbAll.isChecked();
+                //设置是否选择
+                adapter.checkAll_none(isCheckedAll);
                 break;
             case R.id.btn_delete:
-                Toast.makeText(mContext, "删除", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "删除", Toast.LENGTH_SHORT).show();
+                adapter.deleteData();
+
+                adapter.checkAll();
+                showEempty();
                 break;
             case R.id.btn_collection:
                 Toast.makeText(mContext, "收藏", Toast.LENGTH_SHORT).show();
@@ -127,5 +152,47 @@ public class ShoppingCartFragment extends BaseFragment {
                 Toast.makeText(mContext, "去逛逛", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void showEempty() {
+        if (datas == null || datas.size() == 0) {
+            llEmptyShopcart.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showDelete() {
+
+
+        tvShopcartEdit.setText("完成");
+        tvShopcartEdit.setTag(ACTION_COMPLETE);
+        //隐藏结算
+        llCheckAll.setVisibility(View.GONE);
+        //显示删除按钮部分
+        llDelete.setVisibility(View.VISIBLE);
+
+        adapter.checkAll_none(false);
+
+        adapter.checkAll();
+
+        adapter.showTotalPrice();
+    }
+
+    private void hideDelete() {
+        tvShopcartEdit.setText("编辑");
+        tvShopcartEdit.setTag(ACTION_EDIT);
+        llCheckAll.setVisibility(View.VISIBLE);
+        llDelete.setVisibility(View.GONE);
+
+        adapter.checkAll_none(true);
+
+        adapter.checkAll();
+
+        adapter.showTotalPrice();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showData();
     }
 }
