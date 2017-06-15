@@ -59,6 +59,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
         holder.AddSubView.setValue(goodsBean.getNumber());
         holder.AddSubView.setMinValue(1);
+        //库存
         holder.AddSubView.setMaxValue(20);
     }
 
@@ -86,7 +87,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     GoodsBean goodsBean = datas.get(getLayoutPosition());
                     goodsBean.setChecked(!goodsBean.isChecked());
 
-                  //刷新适配器
+                    //刷新适配器
                     notifyItemChanged(getLayoutPosition());
                 }
             });
