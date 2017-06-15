@@ -95,6 +95,20 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.AddSubView.setMaxValue(20);
     }
 
+    public void checkAll_none(boolean checked) {
+        if (datas != null && datas.size() > 0) {
+            int number = 0;
+            for (int i = 0; i < datas.size(); i++) {
+                GoodsBean goodsBean = datas.get(i);
+                //只要有一个不选中就设置非全选
+                goodsBean.setChecked(checked);
+                notifyItemChanged(i);
+            }
+        } else {
+            checkboxAll.setChecked(false);
+        }
+    }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         @InjectView(R.id.cb_gov)
@@ -137,7 +151,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         tvShopcartTotal.setText("合计:" + getTotalPrice());
     }
 
-    private double getTotalPrice() {
+    public double getTotalPrice() {
         double result = 0;
         if (datas != null && datas.size() > 0) {
             for (int i = 0; i < datas.size(); i++) {
