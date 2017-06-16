@@ -1,5 +1,6 @@
 package com.atguigu.shoppingtwo_0224.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -112,5 +113,18 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new CommunityFragment());//添加发现Fragment--2
         fragments.add(new ShoppingCartFragment());//添加购物车Fragment
         fragments.add(new UserFragment());//添加用户Fragment--4
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int checkid = intent.getIntExtra("checkid", R.id.rb_home);
+        if(checkid == R.id.rb_home) {
+            //选中首页
+            rgMain.check(R.id.rb_home);
+        }else if(checkid == R.id.rb_cart) {
+            //选中购物车
+            rgMain.check(R.id.rb_cart);
+        }
     }
 }
