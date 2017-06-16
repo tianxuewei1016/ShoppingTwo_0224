@@ -2,6 +2,7 @@ package com.atguigu.shoppingtwo_0224.type.fragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.atguigu.shoppingtwo_0224.R;
@@ -44,6 +45,14 @@ public class ListFragment extends BaseFragment {
         //设置坐标ListView的适配器
         typeLeftAdapter = new TypeLeftAdapter(mContext,titles);
         lvLeft.setAdapter(typeLeftAdapter);
+
+        lvLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                typeLeftAdapter.changeSelectPosition(position);
+                typeLeftAdapter.notifyDataSetChanged();//getView
+            }
+        });
     }
 
     @Override

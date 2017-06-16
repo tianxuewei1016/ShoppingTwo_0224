@@ -1,6 +1,7 @@
 package com.atguigu.shoppingtwo_0224.type.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,6 +21,7 @@ import butterknife.InjectView;
 public class TypeLeftAdapter extends BaseAdapter {
     private final Context mContext;
     private final String[] datas;
+    private int selectPositon;
 
     public TypeLeftAdapter(Context mContext, String[] titles) {
         this.mContext = mContext;
@@ -48,14 +50,27 @@ public class TypeLeftAdapter extends BaseAdapter {
             convertView = View.inflate(mContext, R.layout.item_type, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         String data = datas[position];
         viewHolder.tvTitle.setText(data);
-
+        if (selectPositon == position) {
+            //高亮显示
+            convertView.setBackgroundResource(R.drawable.type_item_background_selector);
+            //选中项背景
+            viewHolder.tvTitle.setTextColor(Color.parseColor("#fd3f3f"));
+        } else {
+            //设置默认
+            convertView.setBackgroundResource(R.drawable.bg2);  //其他项背景
+            viewHolder.tvTitle.setTextColor(Color.parseColor("#323437"));
+        }
 
         return convertView;
+    }
+
+    public void changeSelectPosition(int position) {
+        this.selectPositon = position;
     }
 
     static class ViewHolder {
